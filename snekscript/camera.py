@@ -50,6 +50,8 @@ class RpiCamera(object):
 
     def try_settings(self, directory: str):
         for exposure_mode in self._cam.EXPOSURE_MODES:
+            if exposure_mode == "off":
+                continue
             for awb_mode in self._cam.AWB_MODES:
                 for brightness in range(5, 100, 5):
                     for contrast in range(5, 100, 5):
