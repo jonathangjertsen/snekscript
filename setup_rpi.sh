@@ -1,3 +1,4 @@
+#!/bin/bash
 # Manual script to set up a Raspberry Pi from host
 read -p "This step will manually guide you through the setup process. Press Enter after you have completed each step, or enter data if it prompts you."
 read -p "1. Download these files:
@@ -70,7 +71,7 @@ read -p "24. Open test.jpg and see that it's a picture.
 read -p "25. From command line, run:
     git clone https://github.com/jonathangjertsen/snekscript
     cd snekscript
-    sh setup_rpi_env.sh
+    ./setup_rpi_env.sh
 "
 read -p "25. That's all!
 "
