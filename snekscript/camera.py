@@ -53,8 +53,10 @@ class RpiCamera(object):
             if exposure_mode == "off":
                 continue
             for awb_mode in self._cam.AWB_MODES:
-                for brightness in range(5, 100, 5):
-                    for contrast in range(5, 100, 5):
+                if awb_mode == "off":
+                    continue
+                for brightness in range(10, 100, 10):
+                    for contrast in range(10, 100, 10):
                         self.shoot(
                             location=path.join(directory, "exp={} wb={} brght={} ctr={}.jpg".format(
                                 exposure_mode,
