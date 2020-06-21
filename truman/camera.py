@@ -15,6 +15,7 @@ NIGHT_SETTINGS = {
     "awb_mode": "auto",
     "iso": 800,
     "framerate": Fraction(1, 6),
+    "led": False,
     "_pre_sleep": 10,
 }
 DAY_SETTINGS = {
@@ -22,6 +23,7 @@ DAY_SETTINGS = {
     "awb_mode": "auto",
     "brightness": 50,
     "contrast": 50,
+    "led": False,
     "_pre_sleep": 2,
 }
 NIGHT_START = (20, 0)
