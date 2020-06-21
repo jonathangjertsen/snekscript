@@ -52,9 +52,9 @@ class RpiCamera(object):
         for exposure_mode in self._cam.EXPOSURE_MODES:
             for awb_mode in self._cam.AWB_MODES:
                 for brightness in range(100):
-                    for constrast in range(100):
+                    for contrast in range(100):
                         self.shoot(
-                            location=path.join(directory, "brightness-{}_constrast-{}_exposure_mode-{}_awb_mode-{}.jpg".format(
+                            location=path.join(directory, "brightness-{}_contrast-{}_exposure_mode-{}_awb_mode-{}.jpg".format(
                                 brightness,
                                 contrast,
                                 exposure_mode,
@@ -62,7 +62,7 @@ class RpiCamera(object):
                             )),
                             settings={
                                 "brightness": brightness,
-                                "constrast": constrast,
+                                "contrast": contrast,
                                 "exposure_mode": exposure_mode,
                                 "awb_mode": awb_mode,
                             }
