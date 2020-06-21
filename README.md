@@ -1,4 +1,5 @@
-# snekscript
+# truman
+
 Tools for monitoring my snake terrarium
 
 ## Raspberry PI setup

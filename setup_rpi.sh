@@ -69,8 +69,8 @@ read -p "23. Open a command line in the RPi and run:
 read -p "24. Open test.jpg and see that it's a picture.
 "
 read -p "25. From command line, run:
-    git clone https://github.com/jonathangjertsen/snekscript
-    cd snekscript
+    git clone https://github.com/jonathangjertsen/truman
+    cd truman
     ./setup_rpi_env.sh
 "
 read -p "25. That's all!
