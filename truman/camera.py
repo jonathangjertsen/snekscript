@@ -81,6 +81,9 @@ class DummyCam(object):
     def __getattr__(self, key):
         return key
 
+    def close(self):
+        print("Closed")
+
     def start_preview(self):
         print("Started preview")
 
@@ -108,6 +111,7 @@ class RpiCamera(object):
         for key, value in settings.items():
             backup[key] = getattr(self._cam, key)
             setattr(self._cam, key, value)
+            print("Changed setting", key, "from", backup[key], "to", value)
         return backup
 
     def shoot(self, location: str, preview_duration: float=2.0, settings: dict=None):
@@ -130,7 +134,11 @@ if __name__ == "__main__":
     dt = datetime.datetime.now()
     filename = dt.strftime("cam-{}.jpg".format(FILE_DATE_FORMAT))
 
-    cam = RpiCamera(get_driver())
-    cam.settings(get_settings())
-    cam.shoot(filename)
-    copyfile(filename, "latest.jpg")
+    driver = get_driver()
+    try:
+        cam = RpiCamera(driver)
+        cam.settings(get_settings())
+        cam.shoot(filename)
+        copyfile(filename, "latest.jpg")
+    finally:
+        driver.close()
