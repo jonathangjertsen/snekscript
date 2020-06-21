@@ -4,6 +4,7 @@ from fractions import Fraction
 from os import path, utime
 from time import sleep, time
 from shutil import copyfile
+import sys
 
 RESOLUTION = (1024, 768)
 RESIZED_RESOLUTION = ()
@@ -32,6 +33,18 @@ def get_settings():
         return DAY_SETTINGS
     else:
         return NIGHT_SETTINGS
+
+def get_driver():
+    try:
+        dummy = sys.argv[1] == "test"
+    except IndexError:
+        dummy = False
+
+    if dummy:
+        return DummyCam()
+    else:
+        from picamera import PiCamera
+        return PiCamera()
 
 @contextmanager
 def camera_settings(camera, settings: dict=None):
@@ -106,11 +119,12 @@ class RpiCamera(object):
             time.sleep(record_duration)
             self._cam.stop_recording()
 
+
 if __name__ == "__main__":
     dt = datetime.datetime.now()
     filename = dt.strftime("cam-%Y-%m-%dT%H-%M-%S.jpg")
 
-    cam = RpiCamera(DummyCam())
+    cam = RpiCamera(get_driver())
     cam.settings(get_settings())
     cam.shoot(filename)
     copyfile(filename, "latest.jpg")
