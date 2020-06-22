@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from collections import OrderedDict
 import datetime
 from fractions import Fraction
 from os import path, utime
@@ -6,20 +7,19 @@ from time import sleep, time
 from shutil import copyfile
 import sys
 
-from .constant import FILE_DATE_FORMAT
+from constant import FILE_DATE_FORMAT
 
 RESOLUTION = (1024, 768)
 RESIZED_RESOLUTION = ()
 
-NIGHT_SETTINGS = {
-    "shutter_speed": 6_000_000,
-    "exposure_mode": "off",
-    "awb_mode": "auto",
-    "iso": 800,
-    "framerate": Fraction(1, 6),
-    "led": False,
-    "_pre_sleep": 10,
-}
+NIGHT_SETTINGS = OrderedDict([
+    ("framerate", Fraction(1, 6)),
+    ("shutter_speed", 6_000_000),
+    ("exposure_mode", "off"),
+    ("iso", 800),
+    ("led", False),
+    ("_pre_sleep", 10),
+])
 DAY_SETTINGS = {
     "exposure_mode": "auto",
     "awb_mode": "auto",
@@ -34,9 +34,9 @@ NIGHT_END = (8, 0)
 def get_settings():
     dt = datetime.datetime.now()
     if NIGHT_END < (dt.hour, dt.minute) < NIGHT_START:
-        return DAY_SETTINGS
+        return { **DAY_SETTINGS, "annotate_text": dt.strftime(FILE_DATE_FORMAT) }
     else:
-        return NIGHT_SETTINGS
+        return { **NIGHT_SETTINGS, "annotate_text": dt.strftime(FILE_DATE_FORMAT) }
 
 def get_driver():
     try:
