@@ -56,23 +56,21 @@ def camera_settings(camera, settings: dict=None):
         settings = {}
 
     backup = {}
-    temp_attributes = []
     for key, value in settings.items():
         try:
             backup[key] = getattr(camera, key)
-        except KeyError:
-            temp_attributes.append(key)
         except AttributeError:
             pass
-        setattr(camera, key, value)
+
+        try:
+            setattr(camera, key, value)
+        except AttributeError:
+            pass
 
     yield
 
     for key, value in backup.items():
         setattr(camera, key, value)
-
-    for key in temp_attributes:
-        delattr(camera, key)
 
 class DummyCam(object):
     def __init__(self):
@@ -106,19 +104,10 @@ class RpiCamera(object):
     def __init__(self, camera):
         self._cam = camera
 
-    def settings(self, settings: dict):
-        backup = {}
-        for key, value in settings.items():
-            backup[key] = getattr(self._cam, key)
-            setattr(self._cam, key, value)
-            print("Changed setting", key, "from", backup[key], "to", value)
-        return backup
-
     def shoot(self, location: str, preview_duration: float=2.0, settings: dict=None):
         with camera_settings(self._cam, settings):
             self._cam.start_preview()
-            print(self._cam._pre_sleep)
-            sleep(self._cam._pre_sleep)
+            sleep(settings["_pre_sleep"])
             self._cam.capture(location)
             self._cam.stop_preview()
 
@@ -134,11 +123,12 @@ if __name__ == "__main__":
     dt = datetime.datetime.now()
     filename = dt.strftime("cam-{}.jpg".format(FILE_DATE_FORMAT))
 
+    print(get_settings())
+
     driver = get_driver()
     try:
         cam = RpiCamera(driver)
-        cam.settings(get_settings())
-        cam.shoot(filename)
+        cam.shoot(filename, settings=get_settings())
         copyfile(filename, "latest.jpg")
     finally:
         driver.close()
