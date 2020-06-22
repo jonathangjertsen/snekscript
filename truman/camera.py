@@ -6,6 +6,8 @@ from time import sleep, time
 from shutil import copyfile
 import sys
 
+from .constant import FILE_DATE_FORMAT
+
 RESOLUTION = (1024, 768)
 RESIZED_RESOLUTION = ()
 
@@ -60,6 +62,8 @@ def camera_settings(camera, settings: dict=None):
             backup[key] = getattr(camera, key)
         except KeyError:
             temp_attributes.append(key)
+        except AttributeError:
+            pass
         setattr(camera, key, value)
 
     yield
@@ -124,7 +128,7 @@ class RpiCamera(object):
 
 if __name__ == "__main__":
     dt = datetime.datetime.now()
-    filename = dt.strftime("cam-%Y-%m-%dT%H-%M-%S.jpg")
+    filename = dt.strftime("cam-{}.jpg".format(FILE_DATE_FORMAT))
 
     cam = RpiCamera(get_driver())
     cam.settings(get_settings())
